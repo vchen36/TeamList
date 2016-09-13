@@ -49,3 +49,4 @@ captures/
 # Keystore files
 *.jks
 >>>>>>> 8c2665600535dfa26a9acae51067bb177ac09903
+app/google-services.json

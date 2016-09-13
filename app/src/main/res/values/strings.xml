@@ -15,6 +15,7 @@
         completions."
     </string>
     <string name="action_sign_up">Sign up</string>
+    <string name="logout_dialog">Sign out</string>
     <string name="auth_failed">Email or password is incorrect</string>
     <string name="title_activity_projects">ProjectsActivity</string>
     <string name="large_text">
