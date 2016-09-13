@@ -121,10 +121,12 @@ public class RegisterActivity extends AppCompatActivity {
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mNameView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String name = mNameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -146,6 +148,18 @@ public class RegisterActivity extends AppCompatActivity {
             focusView = mEmailView;
             cancel = true;
         }
+
+        //Check for a valid name.
+        if(TextUtils.isEmpty(name)) {
+            mNameView.setError("This field is required");
+            focusView = mNameView;
+            cancel = true;
+        } else if (!isNameValid(name)) {
+            mNameView.setError("This name is invalid");
+            focusView = mNameView;
+            cancel = true;
+        }
+        
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
