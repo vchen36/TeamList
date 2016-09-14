@@ -12,6 +12,10 @@ public class Project {
     private String name;
     private List<Task> tasks;
 
+    public Project() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
     public Project(String name) {
         this.name = name;
         users = new ArrayList<>();

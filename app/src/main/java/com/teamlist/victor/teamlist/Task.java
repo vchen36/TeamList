@@ -12,6 +12,10 @@ public class Task {
     private String content;
     private List<Task> subtasks;
 
+    public Task() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
     public Task(String content) {
         this.content = content;
         subtasks = new ArrayList<>();

@@ -87,7 +87,7 @@ public class Login extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
                     Intent i = new Intent(Login.this, ProjectsActivity.class);
-                    i.putExtra("userID", user.getUid());
+                    i.putExtra("email", user.getEmail().split("@")[0]);
                     startActivity(i);
                 } else {
                     // User is signed out

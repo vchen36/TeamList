@@ -27,7 +27,7 @@ public class ProjectsActivity extends AppCompatActivity {
         //Get and save the user ID
         Bundle data = getIntent().getExtras();
         if (data != null) {
-            user = data.getString("userID");
+            user = data.getString("email");
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -39,6 +39,10 @@ public class ProjectsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent i = new Intent(ProjectsActivity.this, NewProjectActivity.class);
+                i.putExtra("creator", user);
+                startActivity(i);
+                finish();
             }
         });
     }

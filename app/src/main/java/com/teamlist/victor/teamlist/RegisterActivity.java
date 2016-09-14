@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -44,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         //Firebase stuff
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -72,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
+        mNameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -113,6 +117,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void writeNewUser(String name, String email) {
+        User user = new User(name, email, mAuth.getCurrentUser().getUid());
+        mDatabase.child("users").child("bleh").setValue(user);
+    }
 
     /**
      * Checks all fields if information is valid and tries to log in
@@ -124,9 +132,9 @@ public class RegisterActivity extends AppCompatActivity {
         mNameView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        String name = mNameView.getText().toString();
+        final String name = mNameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -172,15 +180,18 @@ public class RegisterActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+                            Log.d(TAG, "createUserWithEmail:onCompleteEEEE:" + task.isSuccessful());
 
                             // If sign in fails, display a message to the user. If sign in succeeds
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
+
                             if (!task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, R.string.auth_failed,
                                         Toast.LENGTH_SHORT).show();
                                 showProgress(false);
+                            } else {
+                                writeNewUser(name, email);
                             }
 
                         }
