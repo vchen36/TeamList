@@ -19,6 +19,7 @@
     <string name="new_project_name">Project Name</string>
     <string name="add_users_project">Add usernames</string>
     <string name="auth_failed">Email or password is incorrect</string>
+    <string name="add_users_failed">Invalid username(s)</string>
     <string name="submit">Submit</string>
     <string name="title_activity_projects">ProjectsActivity</string>
     <string name="large_text">

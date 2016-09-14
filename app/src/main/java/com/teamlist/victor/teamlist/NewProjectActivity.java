@@ -11,15 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class NewProjectActivity extends AppCompatActivity {
 
     private EditText mProjectNameView;
     private EditText mUsersView;
-
+    private Project newProj;
     private DatabaseReference mDatabase;
+    private String currUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,13 @@ public class NewProjectActivity extends AppCompatActivity {
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            currUser = data.getString("user");
+        }
+
+        newProj = new Project();
 
         mProjectNameView = (EditText) findViewById(R.id.project_name);
         mUsersView = (EditText) findViewById(R.id.usernames);
@@ -66,8 +77,17 @@ public class NewProjectActivity extends AppCompatActivity {
         }
 
         // Check for valid users
-        users.replaceAll("\\s+","");
+
+        users.replaceAll("\\s+", "");
         String[] usersArray = users.split(",");
+        for (int i = 0; i < usersArray.length; i++) {
+            String trimmed = usersArray[i].split("@")[0];
+            if (mDatabase.child("users").child(trimmed) == null) {
+                cancel = true;
+                focusView = mUsersView;
+                mUsersView.setError(getString(R.string.add_users_failed));
+            }
+        }
 
 
         if (cancel) {
@@ -75,6 +95,17 @@ public class NewProjectActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            newProj.setName(projectName);
+            newProj.addUser(currUser);
+            for (int i = 0; i < usersArray.length; i++) {
+                newProj.addUser(usersArray[i].split("@")[0]);
+            }
+            mDatabase.child("projects")
+            Intent i = new Intent(NewProjectActivity.this, ProjectsActivity.class);
+            startActivity(i);
+            finish();
+
+
         }
     }
 }

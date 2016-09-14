@@ -1,16 +1,18 @@
 package com.teamlist.victor.teamlist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Victor on 9/14/2016.
  */
 public class Project {
 
-    private List<String> users;
+    private Map<String, Boolean> users;
     private String name;
-    private List<Task> tasks;
+    private Map<String, Task> tasks;
 
     public Project() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -18,8 +20,8 @@ public class Project {
 
     public Project(String name) {
         this.name = name;
-        users = new ArrayList<>();
-        tasks = new ArrayList<>();
+        users = new HashMap<>();
+        tasks = new HashMap<>();
     }
 
     public String getName() {
@@ -30,24 +32,24 @@ public class Project {
         name = newName;
     }
 
-    public List<String> getUsers() {
+    public Map<String, Boolean> getUsers() {
         return users;
     }
 
     public void addUser(String user) {
-        users.add(user);
+        users.put(user, true);
     }
 
     public void removeUser(String user) {
         users.remove(user);
     }
 
-    public List<Task> getTasks() {
+    public Map<String, Task> getTasks() {
         return tasks;
     }
 
-    public void addTask(Task mTask) {
-        tasks.add(mTask);
+    public void addTask(String ID, Task mTask) {
+        tasks.put(ID, mTask);
     }
 
 }

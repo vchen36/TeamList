@@ -29,6 +29,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * A register screen that offers sign up with username, email, password.
@@ -64,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     Intent i = new Intent(RegisterActivity.this, ProjectsActivity.class);
-                    i.putExtra("userID", user.getUid());
+                    i.putExtra("email", user.getEmail().split("@")[0]);
                     startActivity(i);
                 } else {
                     // User is signed out
@@ -118,8 +123,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void writeNewUser(String name, String email) {
-        User user = new User(name, email, mAuth.getCurrentUser().getUid());
-        mDatabase.child("users").child("bleh").setValue(user);
+        User user = new User(name, email, null);
+        String trimmed = email.split("@")[0];
+        mDatabase.child("users").child(trimmed).setValue(user);
     }
 
     /**
