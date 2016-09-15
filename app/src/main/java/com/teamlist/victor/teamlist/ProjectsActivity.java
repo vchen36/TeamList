@@ -58,6 +58,7 @@ public class ProjectsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(ProjectsActivity.this, ViewProjectsActivity.class);
                 intent.putExtra("selected", myProjects.get(i));
+                startActivity(intent);
             }
         });
 

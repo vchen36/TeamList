@@ -9,12 +9,22 @@ import android.view.View;
 
 public class ViewProjectsActivity extends AppCompatActivity {
 
+    private String selectedProject;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_projects);
+        //Set up the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for the back arrow
+
+        //Get the name of the project from the intent
+        Bundle data = getIntent().getExtras();
+        if (data != null) {
+            selectedProject = data.getString("selected");
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
