@@ -7,15 +7,21 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NewProjectActivity extends AppCompatActivity {
 
@@ -37,7 +43,7 @@ public class NewProjectActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
         if (data != null) {
-            currUser = data.getString("user");
+            currUser = data.getString("creator");
         }
 
         newProj = new Project();
@@ -70,7 +76,7 @@ public class NewProjectActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(projectName)) {
+        if (TextUtils.isEmpty(projectName)) {
             mProjectNameView.setError(getString(R.string.error_field_required));
             focusView = mProjectNameView;
             cancel = true;
@@ -78,8 +84,9 @@ public class NewProjectActivity extends AppCompatActivity {
 
         // Check for valid users
 
-        users.replaceAll("\\s+", "");
+        users = users.replaceAll("\\s+", "");
         String[] usersArray = users.split(",");
+        Log.d("FIRST USER", usersArray[0]);
         for (int i = 0; i < usersArray.length; i++) {
             String trimmed = usersArray[i].split("@")[0];
             if (mDatabase.child("users").child(trimmed) == null) {
@@ -100,11 +107,11 @@ public class NewProjectActivity extends AppCompatActivity {
             for (int i = 0; i < usersArray.length; i++) {
                 newProj.addUser(usersArray[i].split("@")[0]);
             }
-            mDatabase.child("projects")
+            Map<String, Object> vals = newProj.toMap();
+            mDatabase.child("projects").child(newProj.getName()).setValue(vals);
             Intent i = new Intent(NewProjectActivity.this, ProjectsActivity.class);
             startActivity(i);
             finish();
-
 
         }
     }

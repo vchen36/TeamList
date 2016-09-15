@@ -16,12 +16,14 @@ public class Project {
 
     public Project() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        users = new HashMap<>();
+        tasks = new HashMap<>();
     }
 
     public Project(String name) {
+        super();
         this.name = name;
-        users = new HashMap<>();
-        tasks = new HashMap<>();
+
     }
 
     public String getName() {
@@ -50,6 +52,14 @@ public class Project {
 
     public void addTask(String ID, Task mTask) {
         tasks.put(ID, mTask);
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> ret = new HashMap<>();
+        ret.put("name", name);
+        ret.put("members", users);
+        ret.put("tasks", tasks);
+        return ret;
     }
 
 }

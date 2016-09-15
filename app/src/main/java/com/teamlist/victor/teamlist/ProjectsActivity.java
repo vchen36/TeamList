@@ -37,8 +37,6 @@ public class ProjectsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 Intent i = new Intent(ProjectsActivity.this, NewProjectActivity.class);
                 i.putExtra("creator", user);
                 startActivity(i);
@@ -60,6 +58,7 @@ public class ProjectsActivity extends AppCompatActivity {
                 logout();
                 break;
             case R.id.action_settings:
+                //TODO: make settings page
                 break;
             case R.id.sign_out:
                 logout();
@@ -92,7 +91,6 @@ public class ProjectsActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        FirebaseAuth.getInstance().signOut();
         super.onStop();
     }
 }
