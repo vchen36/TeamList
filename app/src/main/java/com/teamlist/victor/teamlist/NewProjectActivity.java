@@ -25,6 +25,8 @@ import java.util.Map;
 
 public class NewProjectActivity extends AppCompatActivity {
 
+    private static final String TAG = "NewProjectActivity";
+
     private EditText mProjectNameView;
     private EditText mUsersView;
     private Project newProj;
@@ -86,7 +88,6 @@ public class NewProjectActivity extends AppCompatActivity {
 
         users = users.replaceAll("\\s+", "");
         String[] usersArray = users.split(",");
-        Log.d("FIRST USER", usersArray[0]);
         for (int i = 0; i < usersArray.length; i++) {
             String trimmed = usersArray[i].split("@")[0];
             if (mDatabase.child("users").child(trimmed) == null) {
@@ -109,6 +110,28 @@ public class NewProjectActivity extends AppCompatActivity {
             }
             Map<String, Object> vals = newProj.toMap();
             mDatabase.child("projects").child(newProj.getName()).setValue(vals);
+
+            for (String u : newProj.getUsers().keySet()) {
+                Log.d("KEYSETVALUES", u);
+                mDatabase.child("users").child(u).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        Log.d("ASDFASDF", "" + user.getName());
+                        user.addProject(newProj.getName());
+                        mDatabase.child("users").child(user.getEmail().split("@")[0]).setValue(user);
+//                        Map<String, Object> updates = new HashMap<>();
+//                        updates.put("/users/" + user.getEmail().split("@")[0], user);
+//                        mDatabase.updateChildren(updates);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+            }
+
             Intent i = new Intent(NewProjectActivity.this, ProjectsActivity.class);
             startActivity(i);
             finish();

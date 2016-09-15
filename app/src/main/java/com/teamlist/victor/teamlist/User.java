@@ -12,7 +12,7 @@ public class User {
 
     private String name;
     private String email;
-    private Map<String, Boolean> mProjects;
+    private Map<String, Boolean> mProjects = new HashMap<>();
 
 
     public User() {
