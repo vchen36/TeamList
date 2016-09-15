@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--<android.support.v4.widget.NestedScrollView -->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--tools:context="com.teamlist.victor.teamlist.ProjectsActivity"-->
+    <!--tools:showIn="@layout/activity_projects">-->
+
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/project_listview"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.teamlist.victor.teamlist.ProjectsActivity"
     tools:showIn="@layout/activity_projects">
 
-    <android.support.v7.widget.ListViewCompat
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    </ListView>
 
-    </android.support.v7.widget.ListViewCompat>
-
-</android.support.v4.widget.NestedScrollView>
+<!--</android.support.v4.widget.NestedScrollView>-->

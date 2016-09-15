@@ -12,12 +12,29 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectsActivity extends AppCompatActivity {
 
+    private static final String TAG = "ProjectsActivity";
+
     private String user;
+    private List<String> myProjects = new ArrayList<>();
+    private ListView listView;
+    private DatabaseReference mDatabase;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +45,39 @@ public class ProjectsActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         if (data != null) {
             user = data.getString("email");
+        } else {
+            user = FirebaseAuth.getInstance().getCurrentUser().getEmail().split("@")[0];
         }
+
+        listView = (ListView)findViewById(R.id.project_listview);
+
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(ProjectsActivity.this, ViewProjectsActivity.class);
+                intent.putExtra("selected", myProjects.get(i));
+            }
+        });
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(user).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                myProjects = new ArrayList<>(user.getmProjects().keySet());
+                Log.d("SIZE OF PROJ", "" + myProjects.size());
+                adapter = new ArrayAdapter<String>(ProjectsActivity.this, R.layout.project_rows, R.id.project_item, myProjects);
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "loadProjects:onCancelled", databaseError.toException());
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,7 +89,6 @@ public class ProjectsActivity extends AppCompatActivity {
                 Intent i = new Intent(ProjectsActivity.this, NewProjectActivity.class);
                 i.putExtra("creator", user);
                 startActivity(i);
-                finish();
             }
         });
     }
@@ -87,6 +135,11 @@ public class ProjectsActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

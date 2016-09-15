@@ -105,24 +105,22 @@ public class NewProjectActivity extends AppCompatActivity {
         } else {
             newProj.setName(projectName);
             newProj.addUser(currUser);
-            for (int i = 0; i < usersArray.length; i++) {
-                newProj.addUser(usersArray[i].split("@")[0]);
+            if (!users.isEmpty()) {
+                for (int i = 0; i < usersArray.length; i++) {
+                    newProj.addUser(usersArray[i].split("@")[0]);
+                }
             }
             Map<String, Object> vals = newProj.toMap();
             mDatabase.child("projects").child(newProj.getName()).setValue(vals);
 
             for (String u : newProj.getUsers().keySet()) {
-                Log.d("KEYSETVALUES", u);
                 mDatabase.child("users").child(u).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        Log.d("ASDFASDF", "" + user.getName());
                         user.addProject(newProj.getName());
                         mDatabase.child("users").child(user.getEmail().split("@")[0]).setValue(user);
-//                        Map<String, Object> updates = new HashMap<>();
-//                        updates.put("/users/" + user.getEmail().split("@")[0], user);
-//                        mDatabase.updateChildren(updates);
+
                     }
 
                     @Override
