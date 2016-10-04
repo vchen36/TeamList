@@ -24,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProjectsActivity extends AppCompatActivity {
@@ -56,7 +58,7 @@ public class ProjectsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(ProjectsActivity.this, ViewProjectsActivity.class);
+                Intent intent = new Intent(ProjectsActivity.this, ViewProjectActivity.class);
                 intent.putExtra("selected", myProjects.get(i));
                 startActivity(intent);
             }
@@ -68,8 +70,7 @@ public class ProjectsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 myProjects = new ArrayList<>(user.getmProjects().keySet());
-                Log.d("SIZE OF PROJ", "" + myProjects.size());
-                adapter = new ArrayAdapter<String>(ProjectsActivity.this, R.layout.project_rows, R.id.project_item, myProjects);
+                adapter = new ArrayAdapter<>(ProjectsActivity.this, R.layout.project_rows, R.id.project_item, myProjects);
                 listView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -146,5 +147,18 @@ public class ProjectsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    private void sortAlphabet(List<String> projects) {
+        if (projects == null) {
+            Log.d("SORT ERROR", "PASSED IN NULL");
+        } else {
+            Collections.sort(myProjects, new Comparator<String>() {
+                @Override
+                public int compare(String s, String t1) {
+
+                }
+            });
+        }
     }
 }

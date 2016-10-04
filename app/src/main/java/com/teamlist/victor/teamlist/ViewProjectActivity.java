@@ -7,23 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class ViewProjectsActivity extends AppCompatActivity {
+public class ViewProjectActivity extends AppCompatActivity {
 
-    private String selectedProject;
+    private String selected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_projects);
-        //Set up the toolbar
+        setContentView(R.layout.activity_view_project);
+
+        //Set up toolbar and back button
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //for the back arrow
+        if (toolbar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        //Get the name of the project from the intent
         Bundle data = getIntent().getExtras();
         if (data != null) {
-            selectedProject = data.getString("selected");
+            selected = data.getString("selected");
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -35,4 +37,5 @@ public class ViewProjectsActivity extends AppCompatActivity {
             }
         });
     }
+
 }

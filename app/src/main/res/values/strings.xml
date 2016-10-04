@@ -115,4 +115,5 @@
     <string name="title_activity_register">Sign up</string>
     <string name="title_activity_new_project">NewProjectActivity</string>
     <string name="title_activity_view_projects">ViewProjectsActivity</string>
+    <string name="title_activity_view_project">ViewProjectActivity</string>
 </resources>

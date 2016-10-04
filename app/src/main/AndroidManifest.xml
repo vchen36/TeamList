@@ -40,8 +40,8 @@
             android:label="@string/title_activity_new_project"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ViewProjectsActivity"
-            android:label="@string/title_activity_view_projects"
+            android:name=".ViewProjectActivity"
+            android:label="@string/title_activity_view_project"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
