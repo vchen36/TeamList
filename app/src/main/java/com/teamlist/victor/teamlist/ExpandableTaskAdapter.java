@@ -18,24 +18,68 @@ public class ExpandableTaskAdapter extends BaseExpandableListAdapter {
 
     private final List<Task> elements;
 
-    public MultiSelectExpandableListAdapter(Context c, List<Task> elements) {
+    public ExpandableTaskAdapter(Context c, List<Task> elements) {
         this.elements = elements;
+        this.context = c;
     }
 
-    public View getGroupView(final int group, final boolean expanded, final View convertView,
-                             final ViewGroup parent) {
-        if (elements.get(group).shouldBeDisplayedAsAGroup()) {
-            // inflate and setup view that displays expandable view header
-        } else {
-            // inflate and setup view of element that should be displayed as single element
-        }
 
-    }
-
+    @Override
     public View getChildView(final int group, final int child, final boolean lastChild, final View convertView,
                              final ViewGroup parent) {
 
         // inflate and setup child view
+        return convertView;
+    }
 
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return 0;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public View getGroupView(final int group, final boolean expanded, final View convertView,
+                             final ViewGroup parent) {
+//        if (elements.get(group).shouldBeDisplayedAsAGroup()) {
+//            // inflate and setup view that displays expandable view header
+//        } else {
+//            // inflate and setup view of element that should be displayed as single element
+//        }
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return 0;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return 0;
+    }
+
+    @Override
+    public int getGroupCount() {
+        return 0;
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
     }
 }

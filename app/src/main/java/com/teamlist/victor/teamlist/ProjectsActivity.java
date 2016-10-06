@@ -1,5 +1,6 @@
 package com.teamlist.victor.teamlist;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,15 +37,16 @@ public class ProjectsActivity extends AppCompatActivity {
 
     private String user;
     private List<String> myProjects = new ArrayList<>();
-    private ListView listView;
+    private RecyclerView rView;
     private DatabaseReference mDatabase;
-    private ArrayAdapter<String> adapter;
+    private ProjectsAdapter adapter;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
-
+        context = getApplicationContext();
         //Get and save the user ID
         Bundle data = getIntent().getExtras();
         if (data != null) {
@@ -51,27 +55,41 @@ public class ProjectsActivity extends AppCompatActivity {
             user = FirebaseAuth.getInstance().getCurrentUser().getEmail().split("@")[0];
         }
 
-        listView = (ListView)findViewById(R.id.project_listview);
-
-
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        rView = (RecyclerView)findViewById(R.id.project_listview);
+        myProjects = new ArrayList<>();
+        adapter = new ProjectsAdapter(this, myProjects);
+        adapter.setOnItemClickListener(new ProjectsAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(View itemView, int position) {
                 Intent intent = new Intent(ProjectsActivity.this, ViewProjectActivity.class);
-                intent.putExtra("selected", myProjects.get(i));
+                intent.putExtra("selected", myProjects.get(position));
                 startActivity(intent);
             }
         });
+        rView.setAdapter(adapter);
+        rView.setLayoutManager(new LinearLayoutManager(this));
+
+
+//        rView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Intent intent = new Intent(ProjectsActivity.this, ViewProjectActivity.class);
+//                intent.putExtra("selected", myProjects.get(i));
+//                startActivity(intent);
+//            }
+//        });
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                myProjects = new ArrayList<>(user.getmProjects().keySet());
-                adapter = new ArrayAdapter<>(ProjectsActivity.this, R.layout.project_rows, R.id.project_item, myProjects);
-                listView.setAdapter(adapter);
+                for (String str : user.getmProjects().keySet()) {
+                    if (!myProjects.contains(str)) {
+                        myProjects.add(str);
+                    }
+                }
+                sortAlphabet(myProjects);
                 adapter.notifyDataSetChanged();
             }
 
@@ -156,7 +174,7 @@ public class ProjectsActivity extends AppCompatActivity {
             Collections.sort(myProjects, new Comparator<String>() {
                 @Override
                 public int compare(String s, String t1) {
-
+                    return s.compareTo(t1);
                 }
             });
         }
