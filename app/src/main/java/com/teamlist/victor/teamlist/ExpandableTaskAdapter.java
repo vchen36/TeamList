@@ -1,12 +1,15 @@
 package com.teamlist.victor.teamlist;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Victor on 9/16/2016.
@@ -14,27 +17,37 @@ import java.util.List;
 public class ExpandableTaskAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private final List<String> taskInfo = new ArrayList<>();
 
-    private final List<Task> elements;
+    private List<Task> topTasks;
+    private Map<Task, List<Task>> subTasks;
 
-    public ExpandableTaskAdapter(Context c, List<Task> elements) {
-        this.elements = elements;
+
+    public ExpandableTaskAdapter(Context c, List<Task> topTasks, Map<Task, List<Task>> subTasks) {
+        this.topTasks = topTasks;
+        this.subTasks = subTasks;
         this.context = c;
     }
 
 
     @Override
-    public View getChildView(final int group, final int child, final boolean lastChild, final View convertView,
-                             final ViewGroup parent) {
-
+    public View getChildView(int group, int child, boolean lastChild, View convertView, ViewGroup parent) {
         // inflate and setup child view
+        if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.child_task, null);
+        }
         return convertView;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return 0;
+       Task choose =  topTasks.get(groupPosition);
+       if (choose.getNumSubtasks() == 0) {
+           return choose;
+       } else {
+           return subTasks.get(choose);
+       }
     }
 
     @Override
@@ -60,17 +73,17 @@ public class ExpandableTaskAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return 0;
+        return topTasks.get(groupPosition).getNumSubtasks();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return 0;
+        return topTasks.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return 0;
+        return topTasks.size();
     }
 
     @Override

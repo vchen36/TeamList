@@ -15,7 +15,8 @@
     <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/task_list">
+        android:id="@+id/task_list"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft">
     </ExpandableListView>
 
 </RelativeLayout>
